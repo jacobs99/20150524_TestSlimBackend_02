@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: nimda22
- * Date: 24.05.2015
- * Time: 09:56
- */
 
 require 'Slim/Slim.php';
 
@@ -13,7 +7,7 @@ $app = new \Slim\Slim();
 $app = \Slim\Slim::getInstance();
 
 
-
+// make sure the square route has CORS enabled...option call
 $app->options('/square/:val', function () use($app) {
     $response = $app->response();
     $response->header('Access-Control-Allow-Origin', '*');
@@ -23,19 +17,27 @@ $app->options('/square/:val', function () use($app) {
 });
 
 
+// hello world get route
 $app->get('/hello/:name', function ($name) {
     echo "Hello, $name";
 });
 
+
+// sample get route to square a number
 $app->get('/square/:val', function ($val) use($app) {
+
+    // get response object
+    $response = $app->response();
+
+    // enable CORS on get call
+    $response->header('Access-Control-Allow-Origin', '*');
 
     $result = $val * $val;
     $post_data = array('input_val' => $val,
         'output_val' => $result);
 
-    echo json_encode($post_data);
+    $response->body(json_encode($post_data));
 });
-
 
 
 $app->run();
